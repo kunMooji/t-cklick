@@ -17,12 +17,12 @@ public class Fbutton extends JButton{
     private Color filloriginal;
     private Color fillOver;
     
-    public Fbutton(){
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
-        filloriginal = new Color(0, 167, 157);
-        fillOver = new Color(21, 144, 135);
-        fill = filloriginal;
-        strokeWidth = 2;
+public Fbutton() {
+    setCursor(new Cursor(Cursor.HAND_CURSOR));
+    filloriginal = new Color(128, 0, 128); // Warna ungu asli
+    fillOver = new Color(148, 0, 211);    // Warna ungu saat hover
+    fill = filloriginal;
+    strokeWidth = 2;
         setOpaque(false);
         setBorder(null);
         setFocusPainted(false);

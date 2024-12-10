@@ -105,13 +105,13 @@ public class dashboard_user extends javax.swing.JPanel {
 
     private void loadUserData(JTextField userIdLabel, JTextField usernameLabel, JTextField emailLabel, JTextField phoneLabel, JTextField fullNameLabel, JTextField dobLabel) {
         try (Connection conn = koneksi.konek.GetConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT id, username, email, no_telepon, fullname, tanggal_lahir FROM akun WHERE id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT id, nik, email, no_telepon, fullname, tanggal_lahir FROM pasien WHERE id = ?")) {
 
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     userIdLabel.setText("ID: " + rs.getInt("id"));
-                    usernameLabel.setText("Username: " + rs.getString("username"));
+                    usernameLabel.setText("Username: " + rs.getString("nik"));
                     emailLabel.setText("Email: " + rs.getString("email"));
                     phoneLabel.setText("No. Telepon: " + rs.getString("no_telepon"));
                     fullNameLabel.setText("Fullname: " + rs.getString("fullname"));

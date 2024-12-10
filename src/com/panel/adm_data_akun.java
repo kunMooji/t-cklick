@@ -56,11 +56,10 @@ public class adm_data_akun extends javax.swing.JPanel {
         
           JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(tambahAdmin); 
         containerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         JTextField searchField = new JTextField(20); //searchbar
-        searchField.setToolTipText("Cari berdasarkan username, email, atau nama lengkap");
+        searchField.setToolTipText("Cari berdasarkan nik, email, atau nama lengkap");
         searchField.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -87,9 +86,9 @@ public class adm_data_akun extends javax.swing.JPanel {
     private void loadDataToTable(String filter) {
         try {
             // query buat ambil data akun
-            String query = "SELECT id, username, email, role, no_telepon, fullname, tanggal_lahir, created_at FROM akun";
+            String query = "SELECT id, nik, email, no_telepon, fullname, tanggal_lahir FROM pasien";
             if (!filter.isEmpty()) { 
-                query += " WHERE username LIKE ? OR email LIKE ? OR fullname LIKE ?";
+                query += " WHERE nik LIKE ? OR email LIKE ? OR fullname LIKE ?";
             }
 
             PreparedStatement pst = connection.prepareStatement(query); // prepare statement
@@ -103,22 +102,21 @@ public class adm_data_akun extends javax.swing.JPanel {
             ResultSet rs = pst.executeQuery(); // eksekusi query
 
             DefaultTableModel model = new DefaultTableModel(new String[]{
-                "Id Akun", "Username", "Email", "Role", "No Telp", "Nama Lengkap", "Tanggal Lahir", "Akun Dibuat"
+                "Id Akun", "Nik", "Email", "No Telp", "Nama Lengkap", "Tanggal Lahir"
             }, 0); // set model tabel
 
             while (rs.next()) { // looping buat masukin data ke tabel
                 int idAkun = rs.getInt("id"); // ambil id akun
-                String usernameAkun = rs.getString("username"); // ambil username
+                String nikPasien = rs.getString("nik"); // ambil nik
                 String emailAkun = rs.getString("email"); // ambil email, dst.. ini no telp sm ttl pake setString juga soale di db nya pake varchar
-                String roleAkun = rs.getString("role"); 
                 String noTelpAkun = rs.getString("no_telepon"); 
                 String namaLengkap = rs.getString("fullname"); 
                 String ttl = rs.getString("tanggal_lahir"); 
-                String createdAt = rs.getString("created_at"); 
+         
 
                 // masukin data ke model
                 model.addRow(new Object[]{
-                    idAkun, usernameAkun, emailAkun, roleAkun, noTelpAkun, namaLengkap, ttl, createdAt
+                    idAkun, nikPasien, emailAkun, noTelpAkun, namaLengkap, ttl
                 });
             }
 
@@ -128,14 +126,12 @@ public class adm_data_akun extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error mengambil data: " + e.getMessage()); // ini klo error ambil data
         }
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tabel_akun = new javax.swing.JTable();
-        tambahAdmin = new javax.swing.JButton();
         delete_btn = new javax.swing.JButton();
 
         tabel_akun.setModel(new javax.swing.table.DefaultTableModel(
@@ -155,13 +151,6 @@ public class adm_data_akun extends javax.swing.JPanel {
         tabel_akun.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(tabel_akun);
 
-        tambahAdmin.setText("tambah");
-        tambahAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tambahAdminActionPerformed(evt);
-            }
-        });
-
         delete_btn.setText("delete");
         delete_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,11 +163,9 @@ public class adm_data_akun extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(29, 29, 29)
                 .addComponent(delete_btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tambahAdmin)
-                .addContainerGap(721, Short.MAX_VALUE))
+                .addContainerGap(802, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(22, 22, 22)
@@ -188,30 +175,18 @@ public class adm_data_akun extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(490, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(delete_btn)
-                    .addComponent(tambahAdmin))
-                .addGap(57, 57, 57))
+                .addContainerGap(489, Short.MAX_VALUE)
+                .addComponent(delete_btn)
+                .addGap(49, 49, 49))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(106, 106, 106)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(106, Short.MAX_VALUE)))
+                    .addContainerGap(97, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tambahAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahAdminActionPerformed
-          // Tampilkan frame registrasi penyakit
-        registrasiAdmin registrasiFrame = new registrasiAdmin();
-    registrasiFrame.setVisible(true);
-
-    // Tutup frame saat ini
-    SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_tambahAdminActionPerformed
-
     private void delete_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_btnActionPerformed
-  
 
     }//GEN-LAST:event_delete_btnActionPerformed
 
@@ -220,6 +195,5 @@ public class adm_data_akun extends javax.swing.JPanel {
     private javax.swing.JButton delete_btn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabel_akun;
-    private javax.swing.JButton tambahAdmin;
     // End of variables declaration//GEN-END:variables
 }

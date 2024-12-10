@@ -254,7 +254,7 @@ public class registrasiAdmin extends javax.swing.JFrame {
         if (rowsInserted > 0) {
             JOptionPane.showMessageDialog(this, "Registrasi berhasil!");
             this.dispose(); 
-            new admin().setVisible(true); 
+            new dokter(1).setVisible(true); 
         }
     } catch (SQLException e) {
         e.printStackTrace();

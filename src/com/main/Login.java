@@ -23,7 +23,6 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         background1 = new com.swing.background();
-        jLabel4 = new javax.swing.JLabel();
         close11 = new com.button.Closelogin();
         login_container = new javax.swing.JPanel();
         password_txt = new javax.swing.JPasswordField();
@@ -34,35 +33,34 @@ public class Login extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         button_login = new com.button.Fbutton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        background1.setBackgroundColor(new java.awt.Color(255, 255, 255));
         background1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/picture/psycare_logo.png"))); // NOI18N
-        background1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 470, 390));
-        background1.add(close11, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, -1, -1));
+        background1.add(close11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 10, -1, -1));
 
         login_container.setBackground(new java.awt.Color(255, 255, 255));
         login_container.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         password_txt.setBackground(new java.awt.Color(239, 247, 248));
         password_txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        login_container.add(password_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 260, 30));
+        login_container.add(password_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 340, 30));
 
         username_txt.setBackground(new java.awt.Color(239, 247, 248));
         username_txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        login_container.add(username_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 260, 30));
+        login_container.add(username_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 340, 30));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
         jLabel1.setText("Login");
-        login_container.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, -1));
+        login_container.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
 
         jLabel2.setText("password");
-        login_container.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
+        login_container.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
 
         registrasi_btn.setForeground(new java.awt.Color(51, 102, 255));
         registrasi_btn.setText("registrasi");
@@ -71,10 +69,10 @@ public class Login extends javax.swing.JFrame {
                 registrasi_btnMouseClicked(evt);
             }
         });
-        login_container.add(registrasi_btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 330, -1, -1));
+        login_container.add(registrasi_btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 330, -1, -1));
 
         jLabel5.setText("belum punya akun? ");
-        login_container.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, -1, -1));
+        login_container.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, -1, -1));
 
         jLabel6.setText("username");
         login_container.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
@@ -85,9 +83,12 @@ public class Login extends javax.swing.JFrame {
                 button_loginActionPerformed(evt);
             }
         });
-        login_container.add(button_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 230, 110, 30));
+        login_container.add(button_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 110, 30));
 
-        background1.add(login_container, new org.netbeans.lib.awtextra.AbsoluteConstraints(445, 63, 331, 373));
+        background1.add(login_container, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 380, 400));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/picture/giphy.gif"))); // NOI18N
+        background1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 380, 410));
 
         getContentPane().add(background1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 450));
 
@@ -101,63 +102,63 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_registrasi_btnMouseClicked
 
     private void button_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_loginActionPerformed
-    String username = username_txt.getText();
-    String password = new String(password_txt.getPassword());
-    Connection conn = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    
-    try {
-        conn = konek.GetConnection();
-        //query nyari role berdasarkan username dan password
-        String sql = "SELECT role, id FROM akun WHERE username = ? AND password = ?";
-      
-      
-        //stmt itu statement, conn itu connection
-        //rs itu result
-        stmt = conn.prepareStatement(sql);
-        stmt.setString(1, username);
-        stmt.setString(2, password);
-        rs = stmt.executeQuery();
-        if (rs.next()) {
-            String role = rs.getString("role");
+  String NIK = username_txt.getText();
+        String password = new String(password_txt.getPassword());
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = konek.GetConnection();
+            // Query untuk mencari role dan ID berdasarkan username dan password
+            String sql = "SELECT NIK, password, 'pasien' AS role, id FROM pasien WHERE nik = ? AND password = ?\n" +
+                    "UNION SELECT nik, password, 'dokter' AS role, id_dokter AS id_user FROM dokter WHERE nik = ? AND password = ? LIMIT 1;";
             
-            
-            //misal role udh ketemu dengan kita masukin usn dan pw nya 
-            //dikasih if else , misal role admin masuk ke frame admin, user jg gt
-            if ("admin".equals(role)) {
-            new admin().setVisible(true);
-            this.dispose();
-        } else if ("user".equals(role)) {
-            int userId = rs.getInt("id"); // Get id from query result
-            user usr = new user(userId); // Pass id to user constructor
-            usr.setVisible(true);
-            this.dispose();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, NIK);
+            stmt.setString(2, password);
+            stmt.setString(3, NIK);
+            stmt.setString(4, password);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String role = rs.getString("role");
+
+                        if ("dokter".equals(role)) {
+              int dokId = rs.getInt("id"); // Ambil ID dokter dari result set
+              dokter dokterFrame = new dokter(dokId); // Teruskan ID ke constructor
+              dokterFrame.setVisible(true);
+              this.dispose();
+
+                } else if ("pasien".equals(role)) {
+                    //  login pasien
+                    int userId = rs.getInt("id"); 
+                    pasien usr = new pasien(userId); 
+                    usr.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Username atau Password salah", 
+                    "Login Gagal", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error: " + e.getMessage(), 
+                "Kesalahan dalam Database", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-            //misal usn/pw nya salah muncul exception ky gini
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Username atau Password salah", 
-                "Login Gagal", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-        //catch exception. ini tuh format dari try and catch kalo ga ad ini eror
-        //ini buat ngasih tau misal ada eror dari database
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error: " + e.getMessage(), 
-            "kesalan dalam database", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (stmt != null) stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     }//GEN-LAST:event_button_loginActionPerformed
 
@@ -203,7 +204,7 @@ public class Login extends javax.swing.JFrame {
     private com.button.Closelogin close11;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel login_container;

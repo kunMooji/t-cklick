@@ -1,17 +1,10 @@
 package com.panel;
 
 import com.main.Login;
-import static com.main.admin.mainPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,231 +16,123 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import koneksi.konek;
+import javax.swing.JTextField;
 
-public class dashboard_admin extends javax.swing.JPanel {
-    private adm_data_rs DataRs;
-    private adm_data_dokter DataDokter;
-    private adm_data_penyakit DataPenyakit;
-    private adm_data_akun DataAkun;
-    
-    private Connection koneksi;
-    
-    public dashboard_admin() {
-        try {
-            koneksi = konek.GetConnection();
-            
-            if (koneksi == null) {
-                throw new SQLException("koneksi ke database gagal");
-            }
-        } catch (SQLException e) {
-            // misal eror
-            JOptionPane.showMessageDialog(null, "koneksi ke database gagal: " + e.getMessage());
-            koneksi = null;
-        }
-        
+public class dashboard_dokter extends javax.swing.JPanel {
+
+    private int id_dokter; // menyimpan id dokter
+
+    public dashboard_dokter(int id_dokter) {
+        this.id_dokter = id_dokter; // menyimpan ID dokter
         initComponents();
-        
-        // setting layout panel utama
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
-
-        // bikin panel isi
-        JPanel panelIsi = new JPanel(new BorderLayout());
-        panelIsi.setBackground(Color.WHITE);
-
-        // bikin panel statistik dan masukin ke panel isi
-        JPanel panelStatistik = PanelStatistik();
-        panelIsi.add(panelStatistik, BorderLayout.CENTER);
-
-        // tambahin panel isi ke layout utama
-        add(panelIsi, BorderLayout.CENTER);
-
-        // bikin panel bawah buat tombol logout
-        JPanel panelBawah = new JPanel(new BorderLayout());
-        panelBawah.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panelBawah.setBackground(Color.WHITE);
-
-        // tombol logout
-        JButton tombolLogout = new JButton("Logout");
-        tombolLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        tombolLogout.setBackground(new Color(255, 102, 102));
-        tombolLogout.setForeground(Color.WHITE);
-        tombolLogout.addActionListener(e -> aksiLogout());
-        panelBawah.add(tombolLogout, BorderLayout.EAST);
-
-        add(panelBawah, BorderLayout.SOUTH);
-
-        try {
-            // inisialisasi data untuk komponen lain lainnya
-            DataRs = new adm_data_rs();
-            DataDokter = new adm_data_dokter();
-            DataPenyakit = new adm_data_penyakit();
-            DataAkun = new adm_data_akun();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "gagal inisialisasi komponen: " + e.getMessage());
-        }
+        init();
     }
 
-  private JPanel PanelStatistik() {
-    JPanel panelStatistik = new JPanel(new BorderLayout());
-    panelStatistik.setBorder(new EmptyBorder(20, 20, 20, 20));
-    panelStatistik.setBackground(Color.WHITE);
+    private void init() {
+        setLayout(new BorderLayout(10, 10));  
+        setBackground(new Color(245, 245, 245));  
 
-    
-    // judul di atas
-    JLabel labelJudul = new JLabel("Selamat Datang, Admin!");
-    labelJudul.setFont(new Font("Roboto", Font.BOLD, 24));
-    labelJudul.setHorizontalAlignment(SwingConstants.CENTER);
-    labelJudul.setForeground(new Color(60, 63, 65));
-    panelStatistik.add(labelJudul, BorderLayout.NORTH);
+        // panel judul
+        JPanel titlePanel = new JPanel();
+        titlePanel.setBackground(new Color(70, 130, 180));  
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));  
 
-    // panel grid buat statistik akun, dokter, penyakit, dan rumah sakitnya
-    JPanel panelGrid = new JPanel(new java.awt.GridLayout(2, 2, 20, 20));
-    panelGrid.setBackground(Color.WHITE);
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.insets = new Insets(10, 10, 10, 10); //pake insets buat margin
-    gbc.fill = GridBagConstraints.BOTH;
+        JLabel titleLabel = new JLabel("Data Dokter");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));  
+        titleLabel.setForeground(Color.WHITE);  
+        titlePanel.add(titleLabel);  
 
-    String[] labelStatistik = {
-        "User Aktif", 
-        "Jumlah Dokter Terdaftar", 
-        "Jumlah Rumah Sakit Terdaftar", 
-        "Jumlah Penyakit"
-    };
-    JLabel[] labelNilai = {
-        label_user_aktif, 
-        label_dokter_terdaftar, 
-        label_rs_terdaftar, 
-        label_penyakit_terdaftar
-    };
-    JButton[] tombolDetail = {
-        jButton3, 
-        btn_detail_dokter, 
-        btn_detail_rs, 
-        btn_detail_penyakit
-    };
+        // panel data pengguna
+        JPanel dataPanel = new JPanel();
+        dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
+        dataPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        dataPanel.setBackground(Color.WHITE); 
 
-    for (int i = 0; i < labelStatistik.length; i++) {
-        JPanel panelItem = panelItemStatistik(
-            labelStatistik[i], 
-            labelNilai[i], 
-            tombolDetail[i], 
-            koneksi != null ? ambilJumlahKolom(getNamaTabel(i)) : 0
-        );
-        gbc.gridx = i % 2; // 2 kolom
-        gbc.gridy = i / 2; // baris baru setiap 2 item
-        panelGrid.add(panelItem, gbc);
+        // menampilkan data pengguna
+        JTextField userIdLabel = new JTextField("ID Dokter: ");
+        JTextField nikLabel = new JTextField("NIK: ");
+        JTextField namaLabel = new JTextField("Nama Dokter: ");
+        JTextField jamPraktekLabel = new JTextField("Jam Praktek: ");
+        JTextField noTelpLabel = new JTextField("No. Telepon: ");
+        JTextField jenisLabel = new JTextField("Jenis Dokter: ");
+
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 18);
+        userIdLabel.setFont(labelFont);
+        nikLabel.setFont(labelFont);
+        namaLabel.setFont(labelFont);
+        jamPraktekLabel.setFont(labelFont);
+        noTelpLabel.setFont(labelFont);
+        jenisLabel.setFont(labelFont);
+
+        // Make text fields non-editable
+        userIdLabel.setEditable(false);
+        nikLabel.setEditable(false);
+        namaLabel.setEditable(false);
+        jamPraktekLabel.setEditable(false);
+        noTelpLabel.setEditable(false);
+        jenisLabel.setEditable(false);
+
+        dataPanel.add(userIdLabel);
+        dataPanel.add(Box.createVerticalStrut(10));
+        dataPanel.add(nikLabel);
+        dataPanel.add(Box.createVerticalStrut(10));
+        dataPanel.add(namaLabel);
+        dataPanel.add(Box.createVerticalStrut(10));
+        dataPanel.add(jamPraktekLabel);
+        dataPanel.add(Box.createVerticalStrut(10));
+        dataPanel.add(noTelpLabel);
+        dataPanel.add(Box.createVerticalStrut(10));
+        dataPanel.add(jenisLabel);
+
+        // button Logout
+        JButton logout = new JButton("Logout");
+        logout.setAlignmentX(Component.CENTER_ALIGNMENT);
+        logout.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        logout.setBackground(new Color(255, 102, 102));  
+        logout.setForeground(Color.WHITE);  
+        logout.addActionListener(e -> LogoutAction());
+
+        dataPanel.add(Box.createVerticalStrut(20));
+        dataPanel.add(logout);
+
+        // tambahkan komponen utama ke layout
+        add(titlePanel, BorderLayout.NORTH);  
+        add(dataPanel, BorderLayout.CENTER);  
+
+        loadUserData(userIdLabel, nikLabel, namaLabel, jamPraktekLabel, noTelpLabel, jenisLabel);
     }
 
-    panelStatistik.add(panelGrid, BorderLayout.CENTER);
-    return panelStatistik;
-}
-
-    private JPanel panelItemStatistik(String teksLabel, JLabel labelNilai, JButton tombolDetail, int nilai) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(new Color(200, 200, 200), 1, true),
-                BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
-
-        //label judul
-        JLabel labelJudul = new JLabel(teksLabel);
-        labelJudul.setFont(new Font("Roboto", Font.BOLD, 20)); 
-        labelJudul.setForeground(new Color(60, 63, 65));
-        labelJudul.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        //label jumlah
-        labelNilai.setFont(new Font("Roboto", Font.PLAIN, 28));
-        labelNilai.setForeground(new Color(33, 150, 243));
-        labelNilai.setText(String.valueOf(nilai));
-        labelNilai.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // tombol detail
-        tombolDetail.setFont(new Font("Roboto", Font.BOLD, 16)); 
-        tombolDetail.setPreferredSize(new Dimension(120, 40)); 
-        tombolDetail.setBackground(new Color(33, 150, 243));
-        tombolDetail.setForeground(Color.WHITE);
-        tombolDetail.setFocusPainted(false);
-        tombolDetail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        tombolDetail.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        tombolDetail.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        tombolDetail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                tombolDetail.setBackground(new Color(30, 136, 229));
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                tombolDetail.setBackground(new Color(33, 150, 243));
-            }
-        });
-
-        // nambahin komponen ke panel
-        panel.add(labelJudul);
-        panel.add(Box.createVerticalStrut(15)); // jarak antar elemen
-        panel.add(labelNilai);
-        panel.add(Box.createVerticalStrut(20)); // jarak antara nilai dan tombol
-        panel.add(tombolDetail);
-
-        return panel;
-    }
-
-    private void aksiLogout() {
-            int confirm = JOptionPane.showConfirmDialog(this, "apakah yakin ingin logout ?", "", JOptionPane.YES_NO_OPTION);
+    private void LogoutAction() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Apakah yakin ingin logout?", "", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             Login loginFrame = new Login();
             loginFrame.setVisible(true);
-            ((javax.swing.JFrame) this.getTopLevelAncestor()).dispose();  // nutup frame
+            ((javax.swing.JFrame) this.getTopLevelAncestor()).dispose(); // nutup frame
         }
     }
 
-    private int ambilJumlahKolom(String namaTabel) {
-        // ambil jumlah data di tabel
-        if (koneksi == null || namaTabel.isEmpty()) {
-            return 0;
-        }
+    private void loadUserData(JTextField userIdLabel, JTextField nikLabel, JTextField namaLabel, 
+                               JTextField jamPraktekLabel, JTextField noTelpLabel, JTextField jenisLabel) {
+        try (Connection conn = koneksi.konek.GetConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT id_dokter, nik, nama_dokter, jam_praktek, no_telp, jenis_dokter FROM dokter WHERE id_dokter = ?")) {
 
-        int count = 0;
-        try {
-            String query = "SELECT COUNT(*) AS total FROM " + namaTabel;
-            PreparedStatement pst = koneksi.prepareStatement(query);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                count = rs.getInt("total");
+            stmt.setInt(1, id_dokter);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userIdLabel.setText("ID Dokter: " + rs.getInt("id_dokter"));
+                    nikLabel.setText("NIK: " + rs.getString("nik"));
+                    namaLabel.setText("Nama Dokter: " + rs.getString("nama_dokter"));
+                    jamPraktekLabel.setText("Jam Praktek: " + rs.getString("jam_praktek"));
+                    noTelpLabel.setText("No. Telepon: " + rs.getString("no_telp"));
+                    jenisLabel.setText("Jenis Dokter: " + rs.getString("jenis_dokter"));
+                } else {
+                    JOptionPane.showMessageDialog(this, "Data dokter tidak ditemukan.");
+                }
             }
-
-            rs.close();
-            pst.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "error saat ambil data: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat memuat data dokter: " + e.getMessage());
             e.printStackTrace();
         }
-        return count;
-    }
-       private String getNamaTabel(int index) {
-        // nyesuaiin nama tabel sesuai index
-        switch(index) {
-            case 0: return "akun";
-            case 1: return "dokter";
-            case 2: return "rumah_sakit";
-            case 3: return "penyakit";
-            default: return "";
-        }
-    }
-
-    public void showForm(Component com) {
-        // buat ganti panel utama
-        mainPanel.removeAll();
-        mainPanel.add(com, BorderLayout.CENTER);
-        mainPanel.repaint();
-        mainPanel.revalidate();
     }
 
     @SuppressWarnings("unchecked")
@@ -380,19 +265,19 @@ public class dashboard_admin extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btn_detail_dokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detail_dokterActionPerformed
-     showForm(DataDokter);
+//     showForm(DataDokter);
     }//GEN-LAST:event_btn_detail_dokterActionPerformed
 
     private void btn_detail_rsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detail_rsActionPerformed
-      showForm(DataRs);
+//      showForm(DataRs);
     }//GEN-LAST:event_btn_detail_rsActionPerformed
 
     private void btn_detail_penyakitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detail_penyakitActionPerformed
-     showForm(DataPenyakit);
+//     showForm(DataPenyakit);
     }//GEN-LAST:event_btn_detail_penyakitActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-   showForm(DataAkun);
+//   showForm(DataAkun);
     }//GEN-LAST:event_jButton3ActionPerformed
 
 

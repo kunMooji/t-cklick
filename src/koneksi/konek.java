@@ -12,7 +12,7 @@ public class konek {
             throw new SQLException("MySQL JDBC driver tidak ditemukan", e);
         }
         return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/db_psycare",
+            "jdbc:mysql://localhost:3306/db_tklik",
             "root",
             ""
         );
